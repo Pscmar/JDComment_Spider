@@ -18,7 +18,7 @@ def commentSave(list_comment):
     '''
     list_comment: 二维list,包含了多条用户评论信息
     '''
-    file = io.open('data/JDComment_ThinkPadP15v_i7T600','w',encoding="utf-8",newline = '')
+    file = io.open('data/JDComment_ThinkPadP15v_all.csv','w',encoding="utf-8",newline = '')
     # file = io.open('data/JDComment_HPzhan99_i7T600.csv','w',encoding="utf-8",newline = '')
     writer = csv.writer(file)
     writer.writerow(['用户ID','评论内容','购买时间','点赞数','回复数','评分','评价时间','产品型号'])#'用户位置',
@@ -83,9 +83,18 @@ if __name__ == "__main__":
     global list_comment
     ua=UserAgent()
     # thinkpadP15v_i7T600
-    format_url = 'https://api.m.jd.com/?appid=item-v3&functionId=pc_club_skuProductPageComments&client=pc&clientVersion=1.0.0&t=1686732829760&loginType=3&uuid=122270672.16803204500281358213226.1680320450.1686727382.1686730326.7&{0}&score={1}&sortType=5&page={2}&pageSize=10&isShadowSku=0&fold=1&bbtf=&shield='
+    # # 只看当前商品
+    # format_url = 'https://api.m.jd.com/?appid=item-v3&functionId=pc_club_skuProductPageComments&client=pc&clientVersion=1.0.0&t=1686732829760&loginType=3&uuid=122270672.16803204500281358213226.1680320450.1686727382.1686730326.7&{0}&score={1}&sortType=5&page={2}&pageSize=10&isShadowSku=0&fold=1&bbtf=&shield='
+    # 页面所有商品
+    format_url = 'https://api.m.jd.com/?appid=item-v3&functionId=pc_club_productPageComments&client=pc&clientVersion=1.0.0&t=1687240016464&loginType=3&uuid=122270672.1423320777.1687232969.1687232970.1687239468.2&{0}&score={1}&sortType=5&page={2}&pageSize=30&isShadowSku=0&fold=1&bbtf=&shield='
+    
+    #####################################################################
+
     # # HPzhan99_i7T600
+    # # 只看当前商品
     # format_url = 'https://api.m.jd.com/?appid=item-v3&functionId=pc_club_skuProductPageComments&client=pc&clientVersion=1.0.0&t=1686732604299&loginType=3&uuid=122270672.16803204500281358213226.1680320450.1686727382.1686730326.7&{0}&score={1}&sortType=5&page={2}&pageSize=10&isShadowSku=0&fold=1&bbtf=&shield='
+    # # 页面所有商品
+    # format_url = 'https://api.m.jd.com/?appid=item-v3&functionId=pc_club_productPageComments&client=pc&clientVersion=1.0.0&t=1687240517762&loginType=3&uuid=122270672.1423320777.1687232969.1687232970.1687239468.2&{0}&score={1}&sortType=5&page={2}&pageSize=20&isShadowSku=0&fold=1&bbtf=&shield='
     # 设置访问请求头
     headers = {
     'Accept': '*/*',
@@ -104,6 +113,7 @@ if __name__ == "__main__":
     list_comment = [[]]
     sig_comment = []
     url = format_url.format('productId=100023130207',0,0)
+    # url = format_url.format('productId=100038768525',0,0)
     print(url)
     try:
         response = requests.get(url=url, headers=headers, verify=False)
@@ -113,6 +123,7 @@ if __name__ == "__main__":
         jsonData = json.loads(jsonData)
         print("最大页数%s"%jsonData['maxPage'])
         getCommentData(format_url,'productId=100023130207',0,jsonData['maxPage'])#遍历每一页
+        # getCommentData(format_url,'productId=100038768525',0,jsonData['maxPage'])#遍历每一页
     except Exception as e:
         print("the error is ",e)
         print("wating---")
